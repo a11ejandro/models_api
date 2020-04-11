@@ -28,7 +28,7 @@ class ChatViewTestCase(APITestCase):
         mock_preview_serializer.return_value = ChatPreviewSerializer(self.first_chat)
         self._set_token()
         self.client.get(path='/gpt2/chats')
-        args, kwargs = mock_preview_serializer.call_args
+        args, _ = mock_preview_serializer.call_args
 
         self.assertTrue(len(args[0]), 2)
 
@@ -59,7 +59,7 @@ class ChatViewTestCase(APITestCase):
 
     @patch.object(ChatDetailsSerializer, 'is_valid', return_value=False)
     @patch.object(ChatDetailsSerializer, 'errors', new_callable=PropertyMock, return_value={})
-    def testCreateInvalid(self, mock_is_valid, mock_errors):
+    def testCreateInvalid(self, mock_errors, mock_is_valid):
         self._set_token()
         response = self.client.post('/gpt2/chats', {'name': 'Antonio'})
         result_json = json.loads(response.content)
@@ -68,7 +68,7 @@ class ChatViewTestCase(APITestCase):
     @patch.object(ChatDetailsSerializer, 'is_valid', return_value=True)
     @patch.object(ChatDetailsSerializer, 'data', new_callable=PropertyMock, return_value={})
     @patch.object(ChatDetailsSerializer, 'save', return_value={})
-    def testCreateValid(self, mock_is_valid, mock_data, mock_save):
+    def testCreateValid(self, mock_save, mock_data, mock_is_valid):
         self._set_token()
         response = self.client.post('/gpt2/chats', {'name': 'Antonio'})
         mock_save.assert_called_once()

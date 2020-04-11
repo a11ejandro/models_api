@@ -28,7 +28,7 @@ class MessageViewTestCase(APITestCase):
     @patch.object(MessageSerializer, 'is_valid', return_value=False)
     @patch.object(MessageSerializer, 'errors', 
         new_callable=PropertyMock, return_value={})
-    def testCreateInvalid(self, mock_is_valid, mock_errors):
+    def testCreateInvalid(self, mock_errors, mock_is_valid):
         self._set_token()
         response = self.client.post('/gpt2/messages',
             {'body': 'You are a parrot!', 'chat': self.chat.pk})
