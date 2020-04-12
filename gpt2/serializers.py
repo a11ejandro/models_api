@@ -8,7 +8,7 @@ class MessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Message
         fields = ['id', 'body', 'created', 'chat', 'sender_name']
-        read_only_fields = ['id', 'created', 'sender_name']
+        read_only_fields = ['created', 'sender_name']
 
 class ChatPreviewSerializer(serializers.ModelSerializer):
 
@@ -33,12 +33,12 @@ class ChatPreviewSerializer(serializers.ModelSerializer):
 
 class ChatDetailsSerializer(serializers.ModelSerializer):
 
-    messages = MessageSerializer(many=True, required=False)
+    messages = MessageSerializer(many=True, required=False, read_only=True)
 
     class Meta:
         model = Chat
         fields = ['id', 'name', 'created', 'messages']
-        read_only_fields = ['messages', 'created']
+        read_only_fields = ['created']
 
     def create(self, validated_data):
         return Chat(**validated_data)

@@ -61,4 +61,3 @@ class MessageViewTestCase(APITestCase):
     def _set_token(self):
         token = Token.objects.get(user__id=self.user.id)
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + token.key)
-

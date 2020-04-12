@@ -51,10 +51,3 @@ class Gpt2Chat():
         response = Gpt2.request(**data)
 
         return self.truncated_response(response)
-
-
-
-        
-
-    
-
