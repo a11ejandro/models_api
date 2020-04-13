@@ -1,12 +1,11 @@
 from django.conf import settings
-from django.http import HttpResponse
 import urllib
-import json
 
 
 class Gpt2():
     # accepted args are:
-    # 'text', 'quiet', 'nsamples', 'unconditional', 'batch_size', 'length', 'temperature', 'top_k'
+    # 'text', 'quiet', 'nsamples', 'unconditional', 'batch_size',
+    # 'length', 'temperature', 'top_k'
 
     @staticmethod
     def request(**kwargs):
@@ -24,7 +23,8 @@ class Gpt2Chat():
 
     def uncomplete_dialog(self):
         # Pass last N messages of dialog to GPT, predict N + 1.
-        last_n = self.chat.messages.all().order_by('-id')[:self.LAST_MESSAGES_COUNT]
+        last_n = self.chat.messages.all().order_by(
+            '-id')[:self.LAST_MESSAGES_COUNT]
         result = ''
 
         for message in last_n:
@@ -38,8 +38,10 @@ class Gpt2Chat():
         return result
 
     def truncated_response(self, response):
-        sentences = response.split('. ')
-        
+        # GPT2 may  predict more than one answer
+        reply = response.split('\n-')[0]
+        sentences = reply.split('. ')
+
         if len(sentences) == 0:
             return sentences
         else:
@@ -47,7 +49,8 @@ class Gpt2Chat():
 
     def next_message(self):
         concatenated = self.uncomplete_dialog()
-        data = {'text': concatenated, 'unconditional': False, 'length': self.LIMIT_MESSAGE_LENGTH}
+        data = {'text': concatenated, 'unconditional': False,
+                'length': self.LIMIT_MESSAGE_LENGTH}
         response = Gpt2.request(**data)
 
         return self.truncated_response(response)

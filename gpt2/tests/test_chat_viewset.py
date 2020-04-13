@@ -2,7 +2,6 @@ from rest_framework.authtoken.models import Token
 from rest_framework.test import APITestCase
 from unittest.mock import patch, PropertyMock
 import json
-from gpt2.views import ChatViewSet
 from gpt2.serializers import ChatDetailsSerializer, ChatPreviewSerializer
 from .factories import ChatFactory, UserFactory
 
@@ -25,7 +24,8 @@ class ChatViewTestCase(APITestCase):
 
     @patch('gpt2.views.ChatPreviewSerializer')
     def testList(self, mock_preview_serializer):
-        mock_preview_serializer.return_value = ChatPreviewSerializer(self.first_chat)
+        mock_preview_serializer.return_value = ChatPreviewSerializer(
+            self.first_chat)
         self._set_token()
         self.client.get(path='/gpt2/chats')
         args, _ = mock_preview_serializer.call_args
@@ -33,32 +33,35 @@ class ChatViewTestCase(APITestCase):
         self.assertTrue(len(args[0]), 2)
 
     def testRetrieveLoginRequired(self):
-        response = self.client.get(path='/gpt2/chats/' + str(self.first_chat.pk))
+        response = self.client.get(
+            path='/gpt2/chats/' + str(self.first_chat.pk))
         self.assertEqual(response.status_code, 401)
         self._set_token()
-        response = self.client.get(path='/gpt2/chats/' + str(self.first_chat.pk))
+        response = self.client.get(
+            path='/gpt2/chats/' + str(self.first_chat.pk))
         self.assertEqual(response.status_code, 200)
 
     @patch('gpt2.views.ChatDetailsSerializer')
     def testRetrieve(self, mock_details_serializer):
-        mock_details_serializer.return_value = ChatDetailsSerializer(self.first_chat)
+        mock_details_serializer.return_value = ChatDetailsSerializer(
+            self.first_chat)
 
         self._set_token()
-        response = self.client.get(path='/gpt2/chats/' + str(self.first_chat.pk))
+        response = self.client.get(
+            path='/gpt2/chats/' + str(self.first_chat.pk))
 
         chat_json = json.loads(response.content)
         self.assertEqual(chat_json['name'], self.first_chat.name)
         # Check the correct serializer class was used
         mock_details_serializer.assert_called_once()
 
-
     def testCreateLoginRequired(self):
         response = self.client.post('/gpt2/chats', {'name': 'Antonio'})
         self.assertEqual(response.status_code, 401)
 
-
     @patch.object(ChatDetailsSerializer, 'is_valid', return_value=False)
-    @patch.object(ChatDetailsSerializer, 'errors', new_callable=PropertyMock, return_value={})
+    @patch.object(ChatDetailsSerializer, 'errors',
+                  new_callable=PropertyMock, return_value={})
     def testCreateInvalid(self, mock_errors, mock_is_valid):
         self._set_token()
         response = self.client.post('/gpt2/chats', {'name': 'Antonio'})
@@ -66,7 +69,9 @@ class ChatViewTestCase(APITestCase):
         self.assertEqual(result_json['errors'], {})
 
     @patch.object(ChatDetailsSerializer, 'is_valid', return_value=True)
-    @patch.object(ChatDetailsSerializer, 'data', new_callable=PropertyMock, return_value={})
+    @patch.object(ChatDetailsSerializer, 'data',
+                  new_callable=PropertyMock,
+                  return_value={})
     @patch.object(ChatDetailsSerializer, 'save', return_value={})
     def testCreateValid(self, mock_save, mock_data, mock_is_valid):
         self._set_token()
@@ -74,10 +79,8 @@ class ChatViewTestCase(APITestCase):
         mock_save.assert_called_once()
         self.assertEqual(response.status_code, 200)
 
+    # PRIVATE #
 
-    ### PRIVATE ###
     def _set_token(self):
         token = Token.objects.get(user__id=self.first_user.id)
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + token.key)
-
-

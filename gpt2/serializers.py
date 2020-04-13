@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from gpt2.models import Chat, Message
 
+
 class MessageSerializer(serializers.ModelSerializer):
 
     chat = serializers.PrimaryKeyRelatedField(queryset=Chat.objects.all())
@@ -9,6 +10,7 @@ class MessageSerializer(serializers.ModelSerializer):
         model = Message
         fields = ['id', 'body', 'created', 'chat', 'sender_name']
         read_only_fields = ['created', 'sender_name']
+
 
 class ChatPreviewSerializer(serializers.ModelSerializer):
 
@@ -24,11 +26,10 @@ class ChatPreviewSerializer(serializers.ModelSerializer):
         else:
             return None
 
-
     class Meta:
         model = Chat
         fields = ['id', 'name', 'created', 'messages_count',
-         'last_message_sent_at']
+                  'last_message_sent_at']
 
 
 class ChatDetailsSerializer(serializers.ModelSerializer):

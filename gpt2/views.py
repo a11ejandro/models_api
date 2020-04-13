@@ -1,15 +1,13 @@
-from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 
-
 from rest_framework import viewsets, status
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from .models import Chat, Message
-from .serializers import ChatDetailsSerializer, ChatPreviewSerializer, MessageSerializer
+from .serializers import ChatDetailsSerializer, ChatPreviewSerializer
 from .services import post_and_reply
+
 
 class ChatViewSet(viewsets.ViewSet):
 
@@ -26,7 +24,6 @@ class ChatViewSet(viewsets.ViewSet):
         chat = get_object_or_404(self.queryset, pk=pk)
         serializer = ChatDetailsSerializer(chat)
         return Response(serializer.data)
-
 
     def create(self, request):
         serializer = ChatDetailsSerializer(data=request.data)
@@ -47,13 +44,14 @@ class MessageViewSet(viewsets.ViewSet):
 
         if chat.user_id != request.user.id:
             return Response({'errors': 'Chat not available for posting'},
-                status=status.HTTP_403_FORBIDDEN)
+                            status=status.HTTP_403_FORBIDDEN)
 
-        success, error = post_and_reply(data=request.data, chat=chat, user=request.user)
+        success, error = post_and_reply(
+            data=request.data, chat=chat, user=request.user)
 
         if success:
             chat_serializer = ChatDetailsSerializer(chat)
             return Response(chat_serializer.data)
         else:
-            return Response({'errors': error}, status=status.HTTP_400_BAD_REQUEST)
-
+            return Response({'errors': error},
+                            status=status.HTTP_400_BAD_REQUEST)

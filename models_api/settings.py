@@ -1,3 +1,5 @@
+# flake8: noqa E501
+
 """
 Django settings for models_api project.
 
@@ -10,26 +12,17 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
-import environ
+import os
 
-
-root = environ.Path(__file__) - 2  # get root of the project
-print(root)
-env = environ.Env()
-environ.Env.read_env()  # reading .env file
-
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = root()
-
-
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env.str('SECRET_KEY')
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env.bool('DEBUG', default=False)
+DEBUG = os.environ.get('DEBUG', default=False)
 
 ALLOWED_HOSTS = []
 
@@ -103,11 +96,11 @@ WSGI_APPLICATION = 'models_api.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env.str('POSTGRES_DATABASE', default='models_api'),
-        'USER': env.str('POSTGRES_USER', default='postgres'),
-        'PASSWORD': env.str('POSTGRES_PASSWORD'),
-        'HOST': env.str('POSTGRES_HOST', default='localhost'),
-        'PORT': env.str('POSTGRES_PORT', default='5432')
+        'NAME': os.environ.get('POSTGRES_DATABASE', default='models_api'),
+        'USER': os.environ.get('POSTGRES_USER', default='postgres'),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+        'HOST': os.environ.get('POSTGRES_HOST', default='localhost'),
+        'PORT': os.environ.get('POSTGRES_PORT', default='5432')
     }
 }
 
@@ -163,7 +156,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, "static_files")
 
-GPT2_ENDPOINT = env.str('GPT2_ENDPOINT', default='localhost:8001')
+GPT2_ENDPOINT = os.environ.get('GPT2_ENDPOINT', default='localhost:8001')
 
 SITE_ID = 1

@@ -6,6 +6,7 @@ from gpt2.models import Chat, Message
 
 FAKER = faker.faker.Faker()
 
+
 class UserFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = User
@@ -22,7 +23,7 @@ class ChatFactory(factory.django.DjangoModelFactory):
 
     name = 'The girl has no name'
     user = factory.SubFactory(UserFactory)
-    
+
 
 class MessageFactory(factory.django.DjangoModelFactory):
     class Meta:

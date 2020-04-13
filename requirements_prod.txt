@@ -1,0 +1,11 @@
+django
+django-allauth
+django-environ
+django-extensions
+
+djangorestframework
+factory_boy
+mock
+httpretty
+psycopg2-binary
+gunicorn

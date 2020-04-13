@@ -1,0 +1,4 @@
+postgres_data
+docker-compose.yml
+Dockerfile*
+__pycache__

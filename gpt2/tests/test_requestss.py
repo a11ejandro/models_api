@@ -1,5 +1,5 @@
 from django.test import TestCase
-from unittest.mock import patch, Mock, PropertyMock
+from unittest.mock import patch, Mock
 from gpt2.requests import Gpt2, Gpt2Chat
 from .factories import ChatFactory, MessageFactory
 
@@ -8,7 +8,7 @@ class TestRequests(TestCase):
     @patch('gpt2.requests.urllib.request.urlopen')
     def testGpt2Request(self, urllib_mock):
         returned_obj = Mock()
-        returned_obj.read = Mock(return_value = 'hi')
+        returned_obj.read = Mock(return_value='hi')
         urllib_mock.return_value = returned_obj
 
         result = Gpt2.request(a=1, b=2)
@@ -16,6 +16,7 @@ class TestRequests(TestCase):
         expected_kwargs = {'a': 1, 'b': 2}
         self.assertDictEqual(kwargs, {'data': expected_kwargs})
         self.assertEqual(result, 'hi')
+
 
 class TestChat(TestCase):
     def setUp(self):
@@ -29,7 +30,6 @@ class TestChat(TestCase):
         concatenated = self.gpt2_chat.uncomplete_dialog()
         # Take into account placeholder for empty reply
         self.assertEqual(len(concatenated.split('\n')), 5)
-
 
     @patch('gpt2.requests.Gpt2Chat.uncomplete_dialog')
     @patch('gpt2.requests.Gpt2.request')
@@ -46,5 +46,3 @@ class TestChat(TestCase):
             'length': Gpt2Chat.LIMIT_MESSAGE_LENGTH,
         }
         self.assertDictEqual(kwargs, expected_kwargs)
-
-

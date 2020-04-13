@@ -1,8 +1,8 @@
 from django.test import TestCase
 from datetime import datetime, timedelta
-from unittest.mock import patch, PropertyMock
-from gpt2.serializers import ChatDetailsSerializer, ChatPreviewSerializer, MessageSerializer
-from .factories import ChatFactory, MessageFactory, UserFactory
+from gpt2.serializers import ChatDetailsSerializer, ChatPreviewSerializer
+from gpt2.serializers import MessageSerializer
+from .factories import ChatFactory, MessageFactory
 
 
 class TestChatDetailsSerializer(TestCase):
@@ -12,14 +12,13 @@ class TestChatDetailsSerializer(TestCase):
         self.other_message = MessageFactory()
         self.serializer = ChatDetailsSerializer(self.chat)
 
-
     def testMessages(self):
         self.assertEqual(self.chat_message.id,
-            self.serializer.data['messages'][0]['id'])
+                         self.serializer.data['messages'][0]['id'])
         self.assertEqual(len(self.serializer.data['messages']), 1)
 
     def testReadOnlyFields(self):
-        created_at = datetime.now() - timedelta(hours = 1)
+        created_at = datetime.now() - timedelta(hours=1)
 
         data = {
             'id': '300',
@@ -46,12 +45,12 @@ class TestChatPreviewSerializer(TestCase):
         self.chat_message = MessageFactory(chat=self.chat)
         self.other_message = MessageFactory()
         self.serializer = ChatPreviewSerializer(self.chat)
-        
 
     def testMessagesGetters(self):
         self.assertEqual(self.serializer.data['messages_count'], 1)
         self.assertEqual(self.serializer.data['last_message_sent_at'],
-            self.chat_message.created)
+                         self.chat_message.created)
+
 
 class TestMessageSerializer(TestCase):
     def setUp(self):
@@ -63,7 +62,7 @@ class TestMessageSerializer(TestCase):
         self.assertEqual(serializer.data['chat'], self.chat.id)
 
     def testReadOnlyFields(self):
-        created_at = datetime.now() - timedelta(hours = 1)
+        created_at = datetime.now() - timedelta(hours=1)
 
         data = {
             'id': 300,

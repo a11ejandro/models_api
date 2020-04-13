@@ -8,6 +8,7 @@ class ChatForm(ModelForm):
         model = Chat
         fields = ['name', 'user']
 
+
 class MessageForm(ModelForm):
 
     class Meta:
