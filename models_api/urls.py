@@ -21,7 +21,6 @@ from rest_framework.authtoken import views
 urlpatterns = [
     path('gpt2/', include('gpt2.urls')),
     path('admin/', admin.site.urls),
-    url(r'^accounts/', include('allauth.urls')),
     url(r'^api-auth/', include('rest_framework.urls')),
     url(r'^api-token-auth/', views.obtain_auth_token)
 ]

@@ -1,9 +1,9 @@
 django
-django-allauth
 django-environ
 django-extensions
 
 autopep8
+flake8
 djangorestframework
 factory_boy
 mock
