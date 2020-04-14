@@ -24,7 +24,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', default=False)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
 
 
 # Application definition
@@ -39,10 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.sites',
 
     'django_extensions',
-
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
 
     'rest_framework',
     'rest_framework.authtoken',
@@ -63,9 +59,6 @@ MIDDLEWARE = [
 AUTHENTICATION_BACKENDS = (
     # Needed to login by username in Django admin, regardless of `allauth`
     'django.contrib.auth.backends.ModelBackend',
-
-    # `allauth` specific authentication methods, such as login by e-mail
-    'allauth.account.auth_backends.AuthenticationBackend',
 )
 
 ROOT_URLCONF = 'models_api.urls'
@@ -155,7 +148,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = '/static_files/'
 STATIC_ROOT = os.path.join(BASE_DIR, "static_files")
 
 GPT2_ENDPOINT = os.environ.get('GPT2_ENDPOINT', default='localhost:8001')
