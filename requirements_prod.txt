@@ -1,5 +1,6 @@
+python-dotenv
+
 django
-django-environ
 django-extensions
 
 djangorestframework

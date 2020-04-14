@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from rest_framework import serializers
 from gpt2.models import Chat, Message
 
@@ -35,11 +36,10 @@ class ChatPreviewSerializer(serializers.ModelSerializer):
 class ChatDetailsSerializer(serializers.ModelSerializer):
 
     messages = MessageSerializer(many=True, required=False, read_only=True)
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(),
+                                              required=False)
 
     class Meta:
         model = Chat
-        fields = ['id', 'name', 'created', 'messages']
+        fields = ['id', 'name', 'created', 'messages', 'user']
         read_only_fields = ['created']
-
-    def create(self, validated_data):
-        return Chat(**validated_data)

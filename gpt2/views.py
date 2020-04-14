@@ -16,6 +16,7 @@ class ChatViewSet(viewsets.ViewSet):
 
     # Can list chats of other users
     def list(self, request):
+        # TODO: N+1 problem below
         serializer = ChatPreviewSerializer(self.queryset, many=True)
         return Response(serializer.data)
 

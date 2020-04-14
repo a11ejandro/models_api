@@ -1,4 +1,6 @@
+.env*
 postgres_data
-docker-compose.yml
+static_files
+docker-compose*
 Dockerfile*
 __pycache__
