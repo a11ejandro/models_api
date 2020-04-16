@@ -14,6 +14,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 from dotenv import load_dotenv
+
 load_dotenv()
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -24,7 +25,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', default=False)
+DEBUG = bool(os.environ.get('DEBUG', default=0))
 
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
 
@@ -153,6 +154,6 @@ USE_TZ = True
 STATIC_URL = '/static_files/'
 STATIC_ROOT = os.path.join(BASE_DIR, "static_files")
 
-GPT2_ENDPOINT = os.environ.get('GPT2_ENDPOINT', default='localhost:8001')
+GPT2_ENDPOINT = os.environ.get('GPT2_ENDPOINT', default='localhost:8001/model')
 
 SITE_ID = 1

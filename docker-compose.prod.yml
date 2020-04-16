@@ -9,6 +9,9 @@ services:
             - .env.prod.db
         ports:
             - "5432:5432"
+        networks:
+            custom:
+                ipv4_address: 172.20.0.4
 
     web:
         build:
@@ -22,6 +25,11 @@ services:
             - 8000
         env_file:
             - .env.prod
+        extra_hosts:
+            - "dockerhost:172.20.0.1"
+        networks:
+            custom:
+                ipv4_address: 172.20.0.2
         depends_on:
             - postgres
 
@@ -33,6 +41,16 @@ services:
             - web
         volumes:
             - static_files:/home/app/web/static_files
+        networks:
+            custom:
+                ipv4_address: 172.20.0.3
+
+networks:
+    custom:
+        ipam:
+            driver: default
+            config:
+                - subnet: 172.20.0.0/16
 
 volumes:
     postgres_data:
