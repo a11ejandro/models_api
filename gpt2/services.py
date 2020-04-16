@@ -9,17 +9,17 @@ def post_and_reply(data, chat, user):
 
     if serializer.is_valid():
         try:
-            with transaction.atomic:
-                serializer.save(sender_name=user.first_name)
-                reply_body = Gpt2Chat.next_message(chat)
+            with transaction.atomic():
+                serializer.save(sender_name=user.first_name or "Nobody")
+                reply_body = Gpt2Chat(chat).next_message()
                 new_reply = Message(
                     chat=chat, body=reply_body, sender_name='GPT2')
                 new_reply.save()
 
                 return (True, None)
 
-        except Exception:
-            return (False, ["Something went wrong"])
+        except Exception as e:
+            return (False, [str(e)])
 
     else:
         return (False, serializer.errors)
