@@ -3,6 +3,7 @@ python-dotenv
 django
 django-extensions
 
+nplusone
 autopep8
 flake8
 djangorestframework

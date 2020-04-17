@@ -3,6 +3,7 @@ python-dotenv
 django
 django-extensions
 
+nplusone
 djangorestframework
 factory_boy
 mock
