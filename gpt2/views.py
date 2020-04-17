@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404
+from django.db.models import Count, Max
 
 from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated
@@ -16,8 +17,12 @@ class ChatViewSet(viewsets.ViewSet):
 
     # Can list chats of other users
     def list(self, request):
-        # TODO: N+1 problem below
-        serializer = ChatPreviewSerializer(self.queryset, many=True)
+        annotated = self.queryset.annotate(
+            last_message_created=Max('messages__created'),
+            messages_count=Count('messages')
+        )
+
+        serializer = ChatPreviewSerializer(annotated, many=True)
         return Response(serializer.data)
 
     # Can see details of chat of other user
